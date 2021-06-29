@@ -116,6 +116,16 @@ class Message(BaseObject, template=MessageTemplate):
             session=self.state.client.rest,
             fmt=dict(channel_id=self.channel.id, message_id=self.id))
 
+    async def bulk_delete(self, messages) -> None:
+        await rest.bulk_delete_messages.request(
+            json={
+                'messages': [
+                    Snowflake.try_snowflake(message) for message in messages
+                ]
+            },
+            fmt=dict(channel_id=self.id)
+        )
+
     def update(self, data, *args, **kwargs):
         super().update(data, *args, **kwargs)
 

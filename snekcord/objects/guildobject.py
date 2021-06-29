@@ -376,6 +376,12 @@ class Guild(BaseObject, template=GuildTemplate):
                 stage['guild_id'] = self.id
                 self.state.client.stages.upsert(stage)
 
+    async def webhooks(self):
+        data = await rest.get_guild_webhooks.request(
+            session=self.state.client.rest, fmt={'guild_id': self.id}
+        )
+        return self.state.client.webhooks.upsert_many(data)
+
 
 GuildBanTemplate = JsonTemplate(
     reason=JsonField('reason'),

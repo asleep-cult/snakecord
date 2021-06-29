@@ -1,5 +1,6 @@
 from .baseobject import BaseObject, BaseTemplate
 from .. import rest
+from ..states.webhookstate import ChannelWebhookState
 from ..utils import _validate_keys
 from ..utils.enum import Enum
 from ..utils.json import JsonArray, JsonField, JsonObject, JsonTemplate
@@ -216,6 +217,8 @@ class TextChannel(GuildChannel, template=TextChannelTemplate):
     Attributes:
         messages MessageState: The channel's message state
 
+        webhooks WebhookState: The channel's webhook state
+
         topic str: The channel's topic
 
         slowmode int: The amount of time you have to wait between
@@ -224,7 +227,7 @@ class TextChannel(GuildChannel, template=TextChannelTemplate):
         last_message_id Snowflake: The id of the last message sent in the
             channel
     """
-    __slots__ = ('messages', 'last_pin_timestamp')
+    __slots__ = ('messages', 'webhooks', 'last_pin_timestamp')
 
     def __init__(self, *, state):
         super().__init__(state=state)
@@ -233,6 +236,8 @@ class TextChannel(GuildChannel, template=TextChannelTemplate):
 
         self.messages = self.state.client.get_class('MessageState')(
             client=self.state.client, channel=self)
+        self.webhooks = ChannelWebhookState(
+            superstate=self.state.client.webhooks, channel=self)
 
     def __str__(self):
         return f'#{self.name}'

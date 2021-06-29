@@ -1,6 +1,5 @@
 from .basestate import BaseState
 from .. import rest
-from ..objects.reactionsobject import Reactions
 
 __all__ = ('ReactionsState',)
 
@@ -11,6 +10,8 @@ class ReactionsState(BaseState):
         self.message = message
 
     def upsert(self, data):
+        from ..objects import Reactions  # Prevents circular import
+
         ident = self.message.guild.emojis.upsert(data['emoji']).id
         reactions = self.get(ident)
         if reactions is not None:

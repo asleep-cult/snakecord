@@ -14,6 +14,7 @@ from ..states.reactionsstate import ReactionsState
 from ..states.rolestate import GuildMemberRoleState, RoleState
 from ..states.stagestate import StageInstanceState
 from ..states.userstate import UserState
+from ..states.webhookstate import WebhookState
 from ..utils import Bitset, EventDispatcher, Flag
 
 __all__ = ('CacheFlags', 'Client')
@@ -43,7 +44,9 @@ class Client(EventDispatcher):
         'ReactionsState': ReactionsState,
         'GuildMemberRoleState': GuildMemberRoleState,
         'UserState': UserState,
-        'StageInstanceState': StageInstanceState,
+        'RestSession': RestSession,
+        'WebhookState': WebhookState,
+        'StageInstanceState': StageInstanceState
     }
 
     __classes__ = DEFAULT_CLASSES.copy()
@@ -62,6 +65,7 @@ class Client(EventDispatcher):
         self.invites = self.get_class('InviteState')(client=self)
         self.stages = self.get_class('StageInstanceState')(client=self)
         self.users = self.get_class('UserState')(client=self)
+        self.webhooks = self.get_class('WebhookState')(client=self)
 
         self.finalizing = False
 

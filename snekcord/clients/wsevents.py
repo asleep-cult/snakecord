@@ -395,7 +395,9 @@ class MessageDeleteEvent(BaseEvent):
     @classmethod
     async def execute(cls, client, shard, payload):
         message = None
-        channel = client.channels.get(payload['channel_id'])
+        channel = client.channels.get(
+            payload['channel_id']
+        )
 
         if channel is not None:
             message = channel.messages.get(payload['id'])
@@ -417,10 +419,11 @@ class MessageDeleteBulkEvent(BaseEvent):
         channel = client.channels.get(payload['channel_id'])
 
         if channel is not None:
-            for message in payload['id']:
+            for message in payload['ids']:
                 message = channel.messages.get(message)
                 if message is not None:
                     messages.append(message)
+                    message._delete()
 
         return cls(shard=shard, payload=payload, channel=channel,
                    messages=messages)
